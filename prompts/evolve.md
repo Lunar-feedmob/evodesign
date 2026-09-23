@@ -25,3 +25,20 @@ Read, in order:
 8. Save a reflection, Generation JSON record and Run Log containing the prompt version, decision, timestamp and files changed.
 
 Every run must be observable, honest and traceable. Never invent user feedback, analytics, scores, metrics or previous generations. Do not enable cron or modify files outside this repository.
+
+## Scheduled Run Contract
+
+When a scheduled runner provides an authoritative `RUN CONTEXT`, copy its
+generation, previous generation, date, timestamp, prompt version and timezone
+into the evidence. Create exactly these files for that context:
+
+- `reflections/YYYY-MM-DD-gen-XXX.md`
+- `generations/gen-XXX.json`
+- `logs/YYYY-MM-DD-gen-XXX.log`
+
+The generation JSON must remain valid JSON and include `generation`,
+`previousGeneration`, `date`, `timestamp` (or the existing `startedAt` field),
+`promptVersionBefore`, `promptVersionAfter`, `decision` (`CHANGE` or
+`NO_CHANGE`) and `status: "completed"`. Do not overwrite an existing
+generation record, delete historical evidence, commit, push, or edit protected
+infrastructure files. The runner performs validation and owns Git operations.
