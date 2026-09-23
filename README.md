@@ -6,16 +6,16 @@ EvoDesign is an AI self-evolution experiment exploring whether an AI designer ca
 
 ## Current Phase
 
-Phase 1 — Concept Website
+Phase 2 — First Real Evolution Run
 
-当前只是项目介绍页面。
+Phase 1 remains the Generation Zero baseline. Generation 001 is the first manually recorded evolution cycle.
 
 目前尚未运行：
 
 - AI Agent
 - Cron Job
 - Prompt Mutation
-- Self-Evolution Loop
+- Self-Evolution Loop (manual only; cron is disabled)
 
 ## Live Demo
 
@@ -34,6 +34,19 @@ Phase 1 includes:
 - Reflection Example
 - Future Design DNA
 - Roadmap
+
+## Phase 2 Evidence
+
+- `AGENTS.md` — long-term evolution rules
+- `prompts/current.md` — active Design Prompt v1.0
+- `prompts/history/v1.0.md` — immutable prompt history
+- `prompts/evolve.md` — repeatable evolution-cycle instructions
+- `reflections/2026-09-23-gen-001.md` — Generation 001 reflection
+- `generations/gen-001.json` — structured generation record
+- `logs/2026-09-23-gen-001.log` — execution log
+- `scripts/evolve.sh` — safe, manual-only future runner; cron is not enabled
+
+The page's `Live Evolution` section reports only the verified Generation 001 data. Concept previews remain explicitly labeled as concept material.
 
 ## Project Structure
 
