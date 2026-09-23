@@ -87,6 +87,23 @@ If Wrangler is not authenticated, first run:
 npx wrangler login
 ```
 
+## Automatic Deployment
+
+EvoDesign currently uses Cloudflare Pages Direct Upload. Pushes to the GitHub `main` branch are deployed through:
+
+```text
+GitHub Actions → Wrangler → Cloudflare Pages
+```
+
+The workflow is defined in `.github/workflows/deploy-cloudflare.yml` and always targets the existing `evodesign` Pages project from the repository root.
+
+Required GitHub Actions Secrets:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+Secrets must be configured in GitHub repository settings and must never be committed to this repository.
+
 ## Future
 
 Phase 2 will introduce repository-based scheduled runs, reflection records, prompt versioning, and Git-based evolution history. Phase 3 will focus on demonstrating real self-evolution. These features are not implemented in Phase 1.

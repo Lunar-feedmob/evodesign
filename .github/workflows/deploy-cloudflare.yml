@@ -1,0 +1,75 @@
+name: Deploy EvoDesign to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    name: Validate and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Validate static site
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for file in index.html styles.css script.js; do
+            if [[ ! -f "$file" ]]; then
+              echo "::error::Missing required site file: $file"
+              exit 1
+            fi
+          done
+
+          grep -q 'styles.css' index.html
+          grep -q 'script.js' index.html
+
+          python3 - <<'PY'
+          import glob
+          import json
+          import pathlib
+
+          records = glob.glob("generations/*.json")
+          if not records:
+              raise SystemExit("No generation JSON record found")
+          for filename in records:
+              with pathlib.Path(filename).open(encoding="utf-8") as handle:
+                  json.load(handle)
+          print(f"Validated {len(records)} generation JSON record(s)")
+          PY
+
+      - name: Verify Cloudflare secrets exist
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$CF_API_TOKEN" ]]; then
+            echo "::error::Missing GitHub Actions secret CLOUDFLARE_API_TOKEN"
+            exit 1
+          fi
+          if [[ -z "$CF_ACCOUNT_ID" ]]; then
+            echo "::error::Missing GitHub Actions secret CLOUDFLARE_ACCOUNT_ID"
+            exit 1
+          fi
+          echo "Cloudflare deployment secrets are present."
+
+      - name: Deploy to existing Cloudflare Pages project
+        id: deploy
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.136.3"
+          command: pages deploy . --project-name=evodesign
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
