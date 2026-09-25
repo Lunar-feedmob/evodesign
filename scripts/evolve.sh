@@ -227,7 +227,7 @@ run_codex() {
   local -a invoke
   mapfile -d '' -t invoke < <(codex_command)
   log "Starting Codex with workspace-write; output: $codex_log"
-  cat "$STATE_DIR/run-context-${RUN_DATE}-gen-${next_pad}.txt" | "${invoke[@]}" exec --model "$CODEX_MODEL" --sandbox workspace-write --approve-for-me --cd "$ROOT_DIR" - | tee "$codex_log"
+  cat "$STATE_DIR/run-context-${RUN_DATE}-gen-${next_pad}.txt" | "${invoke[@]}" exec --model "$CODEX_MODEL" --approve-for-me --cd "$ROOT_DIR" - | tee "$codex_log"
 }
 
 preflight() {
