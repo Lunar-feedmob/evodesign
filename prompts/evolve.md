@@ -39,6 +39,8 @@ into the evidence. Create exactly these files for that context:
 The generation JSON must remain valid JSON and include `generation`,
 `previousGeneration`, `date`, `timestamp` (or the existing `startedAt` field),
 `promptVersionBefore`, `promptVersionAfter`, `decision` (`CHANGE` or
-`NO_CHANGE`) and `status: "completed"`. Do not overwrite an existing
+`NO_CHANGE`) and `status: "completed"`. Use integer values for `generation` and
+`previousGeneration` (zero-padded strings are also accepted by the runner for
+backward compatibility). Do not overwrite an existing
 generation record, delete historical evidence, commit, push, or edit protected
 infrastructure files. The runner performs validation and owns Git operations.

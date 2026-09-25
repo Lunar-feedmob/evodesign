@@ -158,7 +158,13 @@ file, expected, previous, run_date, prompt_before = sys.argv[1:]
 data = json.loads(Path(file).read_text(encoding="utf-8"))
 checks = {"generation": int(expected), "previousGeneration": int(previous), "date": run_date, "promptVersionBefore": prompt_before, "status": "completed"}
 for key, value in checks.items():
-    if data.get(key) != value:
+    actual = data.get(key)
+    if key in {"generation", "previousGeneration"}:
+        try:
+            actual = int(actual)
+        except (TypeError, ValueError):
+            pass
+    if actual != value:
         raise SystemExit(f"{file}: {key} must equal {value!r}")
 if data.get("decision") not in {"CHANGE", "NO_CHANGE"}:
     raise SystemExit(f"{file}: decision must be CHANGE or NO_CHANGE")

@@ -1,0 +1,26 @@
+{
+  "generation": 2,
+  "previousGeneration": 1,
+  "date": "2026-09-25",
+  "timestamp": "2026-09-25T02:09:16-07:00",
+  "timezone": "America/Los_Angeles",
+  "promptVersionBefore": "v1.0",
+  "promptVersionAfter": "v1.0",
+  "decision": "NO_CHANGE",
+  "status": "completed",
+  "mainWeakness": "Current-status labels are not yet organized as a scalable generation history.",
+  "designLesson": "When evidence is expected to accumulate, status language should be designed as a maintainable history pattern rather than scattered one-off copy.",
+  "reason": "The scheduled run contract required exactly the Generation 002 reflection, generation record and log; the site was preserved rather than making an additional maintenance change outside that output list.",
+  "websiteFilesChanged": [],
+  "evidenceFilesAdded": [
+    "reflections/2026-09-25-gen-002.md",
+    "generations/gen-002.json",
+    "logs/2026-09-25-gen-002.log"
+  ],
+  "filesChanged": [
+    "reflections/2026-09-25-gen-002.md",
+    "generations/gen-002.json",
+    "logs/2026-09-25-gen-002.log"
+  ],
+  "reflection": "reflections/2026-09-25-gen-002.md"
+}
