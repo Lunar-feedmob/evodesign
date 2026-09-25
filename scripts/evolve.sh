@@ -8,6 +8,7 @@ STATE_DIR="${EVODESIGN_STATE_DIR:-${XDG_STATE_HOME:-${USER_HOME:-/tmp}/.local/st
 TIMEZONE="America/Los_Angeles"
 REMOTE="origin"
 BRANCH="main"
+CODEX_MODEL="${EVODESIGN_CODEX_MODEL:-gpt-5.5}"
 
 mkdir -p "$STATE_DIR"
 RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)"
@@ -31,6 +32,7 @@ log "Bash path: ${BASH_PATH:-NOT_FOUND}"
 log "Git path: ${GIT_PATH:-NOT_FOUND}"
 log "Python path: ${PYTHON_PATH:-NOT_FOUND}"
 log "Codex path: ${CODEX_PATH:-NOT_FOUND}"
+log "Codex model: $CODEX_MODEL"
 log "Timezone: $TIMEZONE"
 log "External log: $EXTERNAL_LOG"
 
@@ -209,6 +211,9 @@ codex_command() {
 }
 
 codex_login_status() {
+  if [[ -n "${CODEX_ACCESS_TOKEN:-}" || -n "${OPENAI_API_KEY:-}" ]]; then
+    return 0
+  fi
   local -a invoke
   mapfile -d '' -t invoke < <(codex_command)
   "${invoke[@]}" login status
@@ -222,7 +227,7 @@ run_codex() {
   local -a invoke
   mapfile -d '' -t invoke < <(codex_command)
   log "Starting Codex with workspace-write; output: $codex_log"
-  cat "$STATE_DIR/run-context-${RUN_DATE}-gen-${next_pad}.txt" | "${invoke[@]}" exec --sandbox workspace-write --full-auto --cd "$ROOT_DIR" - | tee "$codex_log"
+  cat "$STATE_DIR/run-context-${RUN_DATE}-gen-${next_pad}.txt" | "${invoke[@]}" exec --model "$CODEX_MODEL" --sandbox workspace-write --full-auto --cd "$ROOT_DIR" - | tee "$codex_log"
 }
 
 preflight() {
@@ -240,6 +245,7 @@ preflight() {
   [[ -f "generations/gen-${current_pad}.json" ]] || fail "CURRENT_GENERATION_FILE_MISSING"
   [[ ! -e "generations/gen-${next_pad}.json" ]] || fail "NEXT_GENERATION_ALREADY_EXISTS"
   [[ -n "$CODEX_PATH" ]] || fail "CODEX_NOT_FOUND"
+  [[ -n "$CODEX_MODEL" ]] || fail "CODEX_MODEL_NOT_FOUND"
   codex_login_status >/dev/null 2>&1 || fail "CODEX_AUTH_UNAVAILABLE"
   [[ -n "$LOCK_MODE" ]] || fail "LOCK_UNAVAILABLE"
   log "PASS repository=$ROOT_DIR"
@@ -249,6 +255,7 @@ preflight() {
   log "PASS current_generation=$current_pad"
   log "PASS next_generation=$next_pad"
   log "PASS codex=$CODEX_PATH"
+  log "PASS codex_model=$CODEX_MODEL"
   log "PASS codex_auth=usable"
   log "PASS required_prompts_and_rules=present"
   log "PASS git_credentials=usable"
@@ -267,6 +274,7 @@ main() {
   require_repo
   required_files
   require_clean
+  [[ -n "$CODEX_MODEL" ]] || fail "CODEX_MODEL_NOT_FOUND"
   sync_git
   local current next current_pad next_pad timestamp
   current="$(generation_number)"

@@ -12,10 +12,9 @@ Phase 1 remains the Generation Zero baseline. Generation 001 is the first manual
 
 目前尚未运行：
 
-- AI Agent
-- Cron Job
-- Prompt Mutation
-- Self-Evolution Loop (manual only; cron is disabled)
+- Generation 002 及后续自动进化
+
+GitHub Actions 已配置为托管每日进化；首次成功运行会创建下一代证据记录。
 
 ## Live Demo
 
@@ -109,17 +108,26 @@ Secrets must be configured in GitHub repository settings and must never be commi
 The daily evolution chain is:
 
 ```text
-Daily Codex automation → scripts/evolve.sh --preflight → Codex (workspace-write)
+GitHub Actions schedule → scripts/evolve.sh --preflight → Codex (workspace-write)
 → reflection / generation / log evidence → validation → Git commit and push
 → GitHub Actions → Wrangler → the existing evodesign Cloudflare Pages project
 ```
 
 ### Schedule
 
-One Codex automation runs daily at **09:00 America/Los_Angeles**. It uses the
-repository's `scripts/evolve.sh` runner and never creates a second schedule.
-Generation 002 is intentionally not created during infrastructure setup; the
-first scheduled execution is responsible for the next generation.
+The `Run EvoDesign evolution` GitHub Actions workflow runs daily at **16:00 UTC**.
+This is 09:00 America/Los_Angeles during daylight saving time and 08:00 during
+standard time because GitHub Actions cron expressions use UTC. It uses the
+repository's `scripts/evolve.sh` runner and never starts a second concurrent run.
+Generation 002 is created only by a verified scheduled or manually dispatched run.
+
+The workflow uses `gpt-5.5` explicitly and installs the latest Codex CLI for each
+run. This keeps the hosted runner independent of the local CLI version.
+
+Required GitHub Actions Secrets (configure one):
+
+- `CODEX_ACCESS_TOKEN` — recommended for supported ChatGPT Business or Enterprise workspaces
+- `OPENAI_API_KEY` — API-key authentication for Codex automation
 
 ### Preflight
 
@@ -149,12 +157,11 @@ external lock and aborts instead of running two generations concurrently.
 
 ### Disable Daily Evolution
 
-View the single Codex automation in the Codex task settings, then pause or
-delete that automation to disable it. Re-enable the same automation (without
-creating a duplicate) after running `scripts/evolve.sh --preflight` again.
-Operational logs are kept outside the repository under
-`~/.local/state/evodesign/`; repository `logs/` contains only per-generation
-evidence.
+Disable the `Run EvoDesign evolution` workflow in the GitHub Actions UI to stop
+the schedule. Re-enable that same workflow (without creating a duplicate) after
+running `scripts/evolve.sh --preflight` again. Operational logs are kept outside
+the repository under `~/.local/state/evodesign/`; repository `logs/` contains
+only per-generation evidence.
 
 ## Future
 
