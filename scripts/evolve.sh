@@ -216,11 +216,13 @@ codex_login_status() {
 
 run_codex() {
   [[ -n "$CODEX_PATH" ]] || fail "CODEX_NOT_FOUND"
-  local codex_log="$STATE_DIR/codex-${RUN_DATE}-gen-${NEXT_PAD}.log"
+  local next_pad
+  next_pad="$(printf '%03d' "$(( $(generation_number) + 1 ))")"
+  local codex_log="$STATE_DIR/codex-${RUN_DATE}-gen-${next_pad}.log"
   local -a invoke
   mapfile -d '' -t invoke < <(codex_command)
   log "Starting Codex with workspace-write; output: $codex_log"
-  cat "$STATE_DIR/run-context-${RUN_DATE}-gen-${NEXT_PAD}.txt" | "${invoke[@]}" exec --sandbox workspace-write --full-auto --cd "$ROOT_DIR" - | tee "$codex_log"
+  cat "$STATE_DIR/run-context-${RUN_DATE}-gen-${next_pad}.txt" | "${invoke[@]}" exec --sandbox workspace-write --full-auto --cd "$ROOT_DIR" - | tee "$codex_log"
 }
 
 preflight() {
