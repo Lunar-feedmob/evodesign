@@ -1,0 +1,26 @@
+{
+  "generation": 3,
+  "previousGeneration": 2,
+  "date": "2026-09-25",
+  "timestamp": "2026-09-25T18:02:31-07:00",
+  "timezone": "America/Los_Angeles",
+  "promptVersionBefore": "v1.0",
+  "promptVersionAfter": "v1.0",
+  "decision": "NO_CHANGE",
+  "status": "completed",
+  "mainWeakness": "The live status pattern is not yet able to absorb multiple verified generations.",
+  "designLesson": "When a design claims to be evidence-driven, the evidence surface should be structured as a repeatable history pattern before individual status labels begin to drift out of date.",
+  "reason": "The scheduled run contract required exactly the Generation 003 reflection, generation record and log, so the website was preserved rather than modifying additional files outside the requested output list.",
+  "websiteFilesChanged": [],
+  "evidenceFilesAdded": [
+    "reflections/2026-09-25-gen-003.md",
+    "generations/gen-003.json",
+    "logs/2026-09-25-gen-003.log"
+  ],
+  "filesChanged": [
+    "reflections/2026-09-25-gen-003.md",
+    "generations/gen-003.json",
+    "logs/2026-09-25-gen-003.log"
+  ],
+  "reflection": "reflections/2026-09-25-gen-003.md"
+}
