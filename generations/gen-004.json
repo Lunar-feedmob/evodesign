@@ -1,0 +1,26 @@
+{
+  "generation": 4,
+  "previousGeneration": 3,
+  "date": "2026-09-27",
+  "timestamp": "2026-09-27T02:18:13-07:00",
+  "timezone": "America/Los_Angeles",
+  "promptVersionBefore": "v1.0",
+  "promptVersionAfter": "v1.0",
+  "decision": "NO_CHANGE",
+  "status": "completed",
+  "mainWeakness": "The page does not yet have a durable generation-history surface.",
+  "designLesson": "Evidence-driven interfaces need repeatable evidence patterns before the evidence becomes plural.",
+  "reason": "The scheduled run context required exactly the Generation 004 reflection, generation record and log, so the website was preserved rather than modifying additional files outside the requested output list.",
+  "websiteFilesChanged": [],
+  "evidenceFilesAdded": [
+    "reflections/2026-09-27-gen-004.md",
+    "generations/gen-004.json",
+    "logs/2026-09-27-gen-004.log"
+  ],
+  "filesChanged": [
+    "reflections/2026-09-27-gen-004.md",
+    "generations/gen-004.json",
+    "logs/2026-09-27-gen-004.log"
+  ],
+  "reflection": "reflections/2026-09-27-gen-004.md"
+}
