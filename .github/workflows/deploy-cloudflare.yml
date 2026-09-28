@@ -47,6 +47,21 @@ jobs:
           print(f"Validated {len(records)} generation JSON record(s)")
           PY
 
+          python3 - <<'PY'
+          import json
+          import pathlib
+
+          status_path = pathlib.Path("rsi-status.json")
+          if not status_path.exists():
+              raise SystemExit("Missing rsi-status.json audit snapshot")
+          status = json.loads(status_path.read_text(encoding="utf-8"))
+          required = ["schemaVersion", "repository", "productionUrl", "currentGeneration", "nextGeneration", "scheduler", "lastRun", "consecutiveNoChange"]
+          missing = [key for key in required if key not in status]
+          if missing:
+              raise SystemExit(f"rsi-status.json missing keys: {missing}")
+          print(f"Validated rsi-status.json at generation {status['currentGeneration']}")
+          PY
+
       - name: Verify Cloudflare secrets exist
         shell: bash
         env:

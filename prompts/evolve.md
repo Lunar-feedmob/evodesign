@@ -54,4 +54,5 @@ recent generations, either implement a justified minimal change or document a
 new, concrete evidence gap that blocks it; do not repeat the same contract-based
 reason. Do not overwrite an existing generation record, delete historical
 evidence, commit, push, or edit protected infrastructure files. The runner
-performs validation and owns Git operations.
+performs validation and owns Git operations. The runner also maintains the
+root `rsi-status.json` audit snapshot; do not edit that file directly.

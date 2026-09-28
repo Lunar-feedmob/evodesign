@@ -81,7 +81,7 @@ require_repo() {
 
 required_files() {
   local file
-  for file in index.html styles.css script.js README.md AGENTS.md prompts/current.md prompts/evolve.md .github/workflows/deploy-cloudflare.yml; do
+  for file in index.html styles.css script.js README.md AGENTS.md prompts/current.md prompts/evolve.md rsi-status.json .github/workflows/deploy-cloudflare.yml; do
     [[ -f "$file" ]] || fail "MISSING_REQUIRED_FILE:$file"
   done
 }
@@ -168,6 +168,66 @@ print(streak)
 PY
 }
 
+write_status_file() {
+  local generation_file="$1"
+  "$PYTHON_PATH" - "$generation_file" <<'PY'
+import glob, json, sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+generation_file = Path(sys.argv[1])
+current = json.loads(generation_file.read_text(encoding="utf-8"))
+records = []
+for filename in glob.glob("generations/gen-*.json"):
+    try:
+        data = json.loads(Path(filename).read_text(encoding="utf-8"))
+        records.append((int(data["generation"]), data))
+    except (OSError, ValueError, KeyError, TypeError):
+        continue
+records.sort(key=lambda item: item[0], reverse=True)
+streak = 0
+for _, data in records:
+    if data.get("decision") != "NO_CHANGE":
+        break
+    streak += 1
+generation = int(current["generation"])
+date = current["date"]
+next_padded = f"{generation:03d}"
+status = {
+    "schemaVersion": 1,
+    "project": "EvoDesign",
+    "repository": "https://github.com/k-tech/evodesign",
+    "productionUrl": "https://evodesign.pages.dev/",
+    "currentGeneration": generation,
+    "nextGeneration": generation + 1,
+    "promptVersion": current.get("promptVersionAfter"),
+    "scheduler": {
+        "provider": "Codex Automation",
+        "automationId": "evodesign-daily-evolution",
+        "schedule": "daily at 09:00",
+        "timezone": "America/Los_Angeles",
+        "status": "ACTIVE",
+    },
+    "lastRun": {
+        "generation": generation,
+        "previousGeneration": int(current["previousGeneration"]),
+        "date": date,
+        "timestamp": current.get("timestamp", current.get("startedAt")),
+        "decision": current.get("decision"),
+        "status": "success",
+        "evidence": {
+            "reflection": f"reflections/{date}-gen-{next_padded}.md",
+            "generation": f"generations/gen-{next_padded}.json",
+            "log": f"logs/{date}-gen-{next_padded}.log",
+        },
+    },
+    "consecutiveNoChange": streak,
+    "updatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+}
+Path("rsi-status.json").write_text(json.dumps(status, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+PY
+}
+
 validate_generation_json() {
   local file="$1" expected="$2" previous="$3" run_date="$4" prompt_before="$5"
   "$PYTHON_PATH" - "$file" "$expected" "$previous" "$run_date" "$prompt_before" <<'PY'
@@ -220,7 +280,7 @@ validate_changes() {
     [[ -n "$status_line" ]] || continue
     code="${status_line:0:2}"
     path="${status_line:3}"
-    [[ "$path" == "index.html" || "$path" == "styles.css" || "$path" == "script.js" || "$path" == "README.md" || "$path" == prompts/* || "$path" == reflections/* || "$path" == generations/* || "$path" == logs/* ]] || fail "REVIEW_REQUIRED:PROTECTED_FILE:$path"
+    [[ "$path" == "index.html" || "$path" == "styles.css" || "$path" == "script.js" || "$path" == "README.md" || "$path" == "rsi-status.json" || "$path" == prompts/* || "$path" == reflections/* || "$path" == generations/* || "$path" == logs/* ]] || fail "REVIEW_REQUIRED:PROTECTED_FILE:$path"
     [[ "$code" != *D* ]] || fail "REVIEW_REQUIRED:DELETED_FILE:$path"
   done < <(git status --porcelain)
 }
@@ -327,7 +387,7 @@ Follow AGENTS.md and prompts/evolve.md. Always produce these evidence files:
 reflections/${RUN_DATE}-gen-${next_pad}.md
 generations/gen-${next_pad}.json
 logs/${RUN_DATE}-gen-${next_pad}.log
-If the reflection supports CHANGE, also implement the smallest useful change in the allowed files. The evidence list is not a restriction on website implementation.
+If the reflection supports CHANGE, also implement the smallest useful change in the allowed files. The evidence list is not a restriction on website implementation. The runner owns rsi-status.json; do not edit it directly.
 If the recent NO_CHANGE streak is two or more, do not repeat the same contract-based NO_CHANGE reason; either make a justified minimal change or document a new concrete evidence gap.
 Do not commit or push. The runner owns Git operations.
 Do not modify protected files, credentials, secrets, .git, .github/workflows, or Cloudflare configuration.
@@ -336,7 +396,8 @@ EOF
   run_codex
   validate_changes
   validate_evidence "$current" "$next" "$RUN_DATE" "$timestamp" "$PROMPT_VERSION"
-  git add -- index.html styles.css script.js README.md prompts reflections generations logs
+  write_status_file "generations/gen-${next_pad}.json"
+  git add -- index.html styles.css script.js README.md rsi-status.json prompts reflections generations logs
   validate_changes
   git diff --cached --quiet && fail "NO_EVOLUTION_CHANGES_STAGED"
   git commit -m "evolution: generation ${next_pad}"

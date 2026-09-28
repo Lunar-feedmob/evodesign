@@ -6,15 +6,11 @@ EvoDesign is an AI self-evolution experiment exploring whether an AI designer ca
 
 ## Current Phase
 
-Phase 2 — First Real Evolution Run
+Phase 2 — Evidence-backed Evolution
 
-Phase 1 remains the Generation Zero baseline. Generation 001 is the first manually recorded evolution cycle.
+Phase 1 remains the Generation Zero baseline. Generation 001 is the first recorded evolution cycle.
 
-目前尚未运行：
-
-- Generation 002 及后续自动进化
-
-本机 Codex 自动化已配置为托管每日进化；首次成功运行会创建下一代证据记录。
+本机 Codex 自动化已配置为托管每日进化；最新状态见 `rsi-status.json`。
 
 ## Live Demo
 
@@ -43,9 +39,10 @@ Phase 1 includes:
 - `reflections/2026-09-23-gen-001.md` — Generation 001 reflection
 - `generations/gen-001.json` — structured generation record
 - `logs/2026-09-23-gen-001.log` — execution log
+- `rsi-status.json` — machine-readable scheduler, freshness and generation snapshot
 - `scripts/evolve.sh` — locked, validated daily evolution runner
 
-The page's `Live Evolution` section reports only the verified Generation 001 data. Concept previews remain explicitly labeled as concept material.
+Concept previews remain explicitly labeled as concept material. The audit snapshot is maintained separately so external checks do not need to infer local Codex automation from Git history.
 
 ## Project Structure
 
@@ -117,7 +114,7 @@ Daily Codex automation → scripts/evolve.sh --preflight → Codex (workspace-wr
 
 One Codex automation runs daily at **09:00 America/Los_Angeles**. It uses the
 repository's `scripts/evolve.sh` runner and never starts a second concurrent run.
-Generation 002 is created only by a verified scheduled or manual run.
+Each next generation is created only by a verified scheduled or manual run; the current generation and recent decision are recorded in `rsi-status.json`.
 
 The runner uses `gpt-5.5` explicitly. It relies on the local Codex login, so no
 GitHub Actions secret is required.
