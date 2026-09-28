@@ -137,6 +137,13 @@ current and next generation records, Codex authentication, Git credentials,
 required prompts/rules, the deployment workflow, and the run lock. It does not
 modify the site, create evidence, commit, or push.
 
+The evidence-file requirement does not prohibit a justified website change.
+When a real weakness is found, the scheduled run may make one minimal change
+to the allowed website or prompt files and record it in the same generation
+evidence. Repeated `NO_CHANGE` decisions must either implement the smallest
+useful fix or identify a new concrete evidence gap; they must not repeat the
+old contract-based reason that website files were not allowed.
+
 ### Manual Run
 
 The normal command starts one real evolution cycle and is intended for a

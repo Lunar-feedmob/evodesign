@@ -30,7 +30,7 @@ Every run must be observable, honest and traceable. Never invent user feedback, 
 
 When a scheduled runner provides an authoritative `RUN CONTEXT`, copy its
 generation, previous generation, date, timestamp, prompt version and timezone
-into the evidence. Create exactly these files for that context:
+into the evidence. Always create these three evidence files for that context:
 
 - `reflections/YYYY-MM-DD-gen-XXX.md`
 - `generations/gen-XXX.json`
@@ -41,6 +41,17 @@ The generation JSON must remain valid JSON and include `generation`,
 `promptVersionBefore`, `promptVersionAfter`, `decision` (`CHANGE` or
 `NO_CHANGE`) and `status: "completed"`. Use integer values for `generation` and
 `previousGeneration` (zero-padded strings are also accepted by the runner for
-backward compatibility). Do not overwrite an existing
-generation record, delete historical evidence, commit, push, or edit protected
-infrastructure files. The runner performs validation and owns Git operations.
+backward compatibility).
+
+The three evidence files are required outputs, not a restriction on the
+implementation. If the reflection supports `CHANGE`, also modify the smallest
+useful allowed website or prompt file before recording the evidence. Allowed
+implementation files are `index.html`, `styles.css`, `script.js`, `README.md`,
+`prompts/`, `reflections/`, `generations/` and `logs/`; the runner will reject
+protected infrastructure changes. Do not choose `NO_CHANGE` merely because the
+evidence files are required. If the same weakness has appeared in two or more
+recent generations, either implement a justified minimal change or document a
+new, concrete evidence gap that blocks it; do not repeat the same contract-based
+reason. Do not overwrite an existing generation record, delete historical
+evidence, commit, push, or edit protected infrastructure files. The runner
+performs validation and owns Git operations.

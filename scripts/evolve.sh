@@ -149,6 +149,25 @@ print(json.loads(open(sys.argv[1], encoding="utf-8").read())["promptVersionAfter
 PY
 }
 
+no_change_streak() {
+  "$PYTHON_PATH" <<'PY'
+import glob, json
+records = []
+for filename in glob.glob("generations/gen-*.json"):
+    try:
+        data = json.load(open(filename, encoding="utf-8"))
+        records.append((int(data.get("generation", 0)), data.get("decision")))
+    except (OSError, ValueError, TypeError):
+        pass
+streak = 0
+for _, decision in sorted(records, reverse=True):
+    if decision != "NO_CHANGE":
+        break
+    streak += 1
+print(streak)
+PY
+}
+
 validate_generation_json() {
   local file="$1" expected="$2" previous="$3" run_date="$4" prompt_before="$5"
   "$PYTHON_PATH" - "$file" "$expected" "$previous" "$run_date" "$prompt_before" <<'PY'
@@ -292,6 +311,7 @@ main() {
   RUN_DATE="${RUN_TIMESTAMP%%T*}"
   PROMPT_VERSION="$(prompt_version)"
   [[ -n "$PROMPT_VERSION" ]] || fail "PROMPT_VERSION_NOT_FOUND"
+  NO_CHANGE_STREAK="$(no_change_streak)"
   timestamp="$RUN_TIMESTAMP"
   cat > "$STATE_DIR/run-context-${RUN_DATE}-gen-${next_pad}.txt" <<EOF
 RUN CONTEXT (authoritative; copy these values into evidence)
@@ -301,15 +321,18 @@ Date: ${RUN_DATE}
 Timestamp: ${RUN_TIMESTAMP}
 Prompt Version: ${PROMPT_VERSION}
 Timezone: ${TIMEZONE}
+Recent NO_CHANGE streak: ${NO_CHANGE_STREAK}
 
-Follow AGENTS.md and prompts/evolve.md. Produce exactly:
+Follow AGENTS.md and prompts/evolve.md. Always produce these evidence files:
 reflections/${RUN_DATE}-gen-${next_pad}.md
 generations/gen-${next_pad}.json
 logs/${RUN_DATE}-gen-${next_pad}.log
+If the reflection supports CHANGE, also implement the smallest useful change in the allowed files. The evidence list is not a restriction on website implementation.
+If the recent NO_CHANGE streak is two or more, do not repeat the same contract-based NO_CHANGE reason; either make a justified minimal change or document a new concrete evidence gap.
 Do not commit or push. The runner owns Git operations.
 Do not modify protected files, credentials, secrets, .git, .github/workflows, or Cloudflare configuration.
 EOF
-  log "RUN_CONTEXT current=$current_pad next=$next_pad date=$RUN_DATE timestamp=$RUN_TIMESTAMP prompt=$PROMPT_VERSION"
+  log "RUN_CONTEXT current=$current_pad next=$next_pad date=$RUN_DATE timestamp=$RUN_TIMESTAMP prompt=$PROMPT_VERSION no_change_streak=$NO_CHANGE_STREAK"
   run_codex
   validate_changes
   validate_evidence "$current" "$next" "$RUN_DATE" "$timestamp" "$PROMPT_VERSION"
