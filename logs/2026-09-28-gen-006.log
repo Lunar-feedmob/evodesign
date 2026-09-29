@@ -1,0 +1,47 @@
+EvoDesign Generation 006 Run Log
+
+Generation: 006
+Previous Generation: 005
+Date: 2026-09-28
+Timestamp: 2026-09-28T19:39:05-07:00
+Timezone: America/Los_Angeles
+Prompt Version: v1.0
+Decision: CHANGE
+Status: completed
+
+Inputs read:
+- AGENTS.md
+- prompts/evolve.md
+- prompts/current.md
+- generations/gen-005.json
+- reflections/2026-09-27-gen-005.md
+- index.html
+- styles.css
+- script.js
+- README.md
+- prior generation records gen-001 through gen-004
+
+Observation:
+The page's concept sections remained clear and honestly labeled, but the verified live evidence area still described the project as the first recorded run even though repository evidence had accumulated through Generation 005 and this run is Generation 006.
+
+Reason for change:
+The recent NO_CHANGE streak was 4, and the same durable-history weakness had appeared in several recent generations. This run context allowed implementation, so repeating the prior contract-based NO_CHANGE reason would not satisfy the evolution rules.
+
+Implementation:
+- Updated the live evidence section from "LIVE - First Run" to "LIVE - Verified History."
+- Added a compact repository-backed generation history from Gen 001 through Gen 006.
+- Updated the current status section to report Generation 006.
+- Added minimal CSS for the history list and its mobile layout.
+
+Files changed:
+- index.html
+- styles.css
+- reflections/2026-09-28-gen-006.md
+- generations/gen-006.json
+- logs/2026-09-28-gen-006.log
+
+Prompt mutation:
+None. The active prompt remains v1.0.
+
+Validation:
+Text-level checks confirmed the new verified-history section, Gen 006 status and history-list styles are present. JSON validation was run for generations/gen-006.json.

@@ -1,0 +1,32 @@
+{
+  "generation": 6,
+  "previousGeneration": 5,
+  "date": "2026-09-28",
+  "timestamp": "2026-09-28T19:39:05-07:00",
+  "timezone": "America/Los_Angeles",
+  "promptVersionBefore": "v1.0",
+  "promptVersionAfter": "v1.0",
+  "decision": "CHANGE",
+  "status": "completed",
+  "recentNoChangeStreak": 4,
+  "mainWeakness": "The verified evidence surface was still designed as a first-run snapshot instead of a durable generation-history pattern.",
+  "designLesson": "When proof is expected to accumulate, the interface should present evidence as a dated sequence and reserve summary cards for the latest state.",
+  "reason": "Generations 002 through 005 repeatedly identified the same scalable-history weakness, and this run context allowed a justified minimal website change instead of repeating the prior contract-based NO_CHANGE reason.",
+  "websiteFilesChanged": [
+    "index.html",
+    "styles.css"
+  ],
+  "evidenceFilesAdded": [
+    "reflections/2026-09-28-gen-006.md",
+    "generations/gen-006.json",
+    "logs/2026-09-28-gen-006.log"
+  ],
+  "filesChanged": [
+    "index.html",
+    "styles.css",
+    "reflections/2026-09-28-gen-006.md",
+    "generations/gen-006.json",
+    "logs/2026-09-28-gen-006.log"
+  ],
+  "reflection": "reflections/2026-09-28-gen-006.md"
+}
