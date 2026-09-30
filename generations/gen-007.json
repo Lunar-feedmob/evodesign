@@ -1,0 +1,30 @@
+{
+  "generation": 7,
+  "previousGeneration": 6,
+  "date": "2026-09-29",
+  "timestamp": "2026-09-29T18:22:23-07:00",
+  "timezone": "America/Los_Angeles",
+  "promptVersionBefore": "v1.0",
+  "promptVersionAfter": "v1.0",
+  "decision": "CHANGE",
+  "status": "completed",
+  "recentNoChangeStreak": 0,
+  "mainWeakness": "Current-state labels across the page described different project moments, mixing Phase 1 concept language with Phase 2 evidence-backed status and the prior latest generation.",
+  "designLesson": "When an experimental site has several status surfaces, every surface that claims to be current must tell the same truth.",
+  "reason": "This was a visible comprehension and trust issue. The smallest useful change was to align status copy around Phase 2 and Generation 007 while preserving concept labels for speculative sections.",
+  "websiteFilesChanged": [
+    "index.html"
+  ],
+  "evidenceFilesAdded": [
+    "reflections/2026-09-29-gen-007.md",
+    "generations/gen-007.json",
+    "logs/2026-09-29-gen-007.log"
+  ],
+  "filesChanged": [
+    "index.html",
+    "reflections/2026-09-29-gen-007.md",
+    "generations/gen-007.json",
+    "logs/2026-09-29-gen-007.log"
+  ],
+  "reflection": "reflections/2026-09-29-gen-007.md"
+}
