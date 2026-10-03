@@ -1,0 +1,30 @@
+{
+  "generation": 8,
+  "previousGeneration": 7,
+  "date": "2026-10-02",
+  "timestamp": "2026-10-02T07:55:19-07:00",
+  "timezone": "America/Los_Angeles",
+  "promptVersionBefore": "v1.0",
+  "promptVersionAfter": "v1.0",
+  "decision": "CHANGE",
+  "status": "completed",
+  "recentNoChangeStreak": 0,
+  "mainWeakness": "The page's latest-generation evidence surfaces still identified Generation 007 after the authoritative Generation 008 run context.",
+  "designLesson": "When a design uses evidence as its credibility layer, freshness is part of the interface.",
+  "reason": "This was a visible trust and comprehension issue. The smallest useful change was to advance the latest-generation labels and verified history while preserving the existing design system.",
+  "websiteFilesChanged": [
+    "index.html"
+  ],
+  "evidenceFilesAdded": [
+    "reflections/2026-10-02-gen-008.md",
+    "generations/gen-008.json",
+    "logs/2026-10-02-gen-008.log"
+  ],
+  "filesChanged": [
+    "index.html",
+    "reflections/2026-10-02-gen-008.md",
+    "generations/gen-008.json",
+    "logs/2026-10-02-gen-008.log"
+  ],
+  "reflection": "reflections/2026-10-02-gen-008.md"
+}
